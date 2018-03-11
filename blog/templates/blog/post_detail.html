@@ -1,0 +1,113 @@
+{% extends 'blog/base.html' %}
+
+{% block content %}
+
+
+    <div class="date">
+    {% if post.published_date %}
+        <!-- Include here logic to show or not show button-->
+        {% if post.author.username == request.user.username %}
+        <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk username=user.username %}"><span class="glyphicon glyphicon-remove"></span></a>
+        <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk username=user.username %}"><span class="glyphicon glyphicon-pencil"></span></a>
+        {% endif %}
+        <!-- Include here logic to show or not show button-->
+        <div class="date">
+        {{ post.published_date }}
+    </div>
+    {% else %}
+    <a class="btn btn-default" href="{% url 'post_publish' username=user.username  pk=post.pk %}">Publish</a>
+    {% endif %}
+    </div>
+    <h3>{{ post.author.username }}</h3>
+    <h2>{{ post.title }}</h2>
+    <p>{{ post.question }}</p>
+
+
+    <!-- include heart-->
+    <div class="heart-particle-box">
+       <button class="likes post-likes" id="heart-icon" data-post-id="{{ post.pk }}">
+           <button class="comments add-comment" id="add-comment" data-post-id="{{ post.pk }}">
+
+       {% if liked %}
+       <i class="heart-shaped fa fa-heart" style="display: line-block"></i>
+       <i class="heart-shaped fa fa-heart-o" style="display: none"></i>
+       {% else %}
+       <i class="heart-shaped fa fa-heart" style="display: none"></i>
+       <i class="heart-shaped fa fa-heart-o" style="display: line-block"></i>
+       {% endif %}
+       </button>
+       <div class="like_count_blog" id="heart-counter">{{ post.likes }}</div>
+    </div>
+    <!-- include heart-->
+
+<hr>
+
+<a class="btn btn-default" id=add_comment_to_post href="{% url 'add_comment_to_post' pk=post.pk  username=user.username %}">Add comment</a>
+
+
+<h1>New comment</h1>
+    <form method="POST" class="post-form">{% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Send</button>
+    </form>
+
+
+{% for comment in post.comments.all %}
+    {% if user.is_authenticated or comment.approved_comment %}
+    <div class="comment">
+        <div class="date">
+            {{ comment.created_date }}
+            {% if not comment.approved_comment %}
+                <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk  username=user.username  %}"><span class="glyphicon glyphicon-remove"></span></a>
+                <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk  username=user.username %}"><span class="glyphicon glyphicon-ok"></span></a>
+            {% endif %}
+
+        </div>
+        <strong>{{ comment.author }}</strong>
+        <p>{{ comment.text|linebreaks }}</p>
+    </div>
+    <hr class="comment">
+    {% endif %}
+{% empty %}
+    <p>No comments here yet :(</p>
+{% endfor %}
+<script>
+
+
+/* like counting */
+$(document).ready(function() {
+    $('.post-likes').click(function() {
+        var id;
+        id = $(this).attr('data-post-id');
+        $.get('/like-blog/', {
+            post_id: id
+        }, function(data) {
+            $('.like_count_blog').html(data);
+        });
+    });
+});
+
+
+/* Comment rendering */
+$(document).ready(function() {
+    $('.add-comment').click(function() {
+        var id;
+        id = $(this).attr('data-post-id');
+        $.get('/add-comment-to-post/', {
+            post_id: id
+        }, function(data) {
+            $('.like_count_blog').html(data);
+
+            var input = document.createElement("input");
+            input.setAttribute('type', 'text');
+            var parent = document.getElementById("add_comment_to_post");
+            parent.appendChild(input);
+
+        });
+    });
+});
+
+</script>
+{% endblock %}
+
+
