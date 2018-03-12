@@ -1,7 +1,13 @@
 {% extends 'blog/base.html' %}
 
 {% block content %}
-    {% for post in posts %}
+
+    <form method="get">
+        {{ posts.form.as_p }}
+        <button type="submit">Search</button>
+    </form>
+
+    {% for post in posts.qs %}
         <div class="post">
             <div class="date">
                 {{ post.published_date }}
