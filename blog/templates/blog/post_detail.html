@@ -25,8 +25,14 @@
 
     <!-- include heart-->
     <div class="heart-particle-box">
-       <button class="likes post-likes" id="heart-icon" data-post-id="{{ post.pk }}">
-           <button class="comments add-comment" id="add-comment" data-post-id="{{ post.pk }}">
+       <button class="glyphicon glyphicon-exclamation-sign" id="heart-icon" data-post-id="{{ post.pk }}">
+           <div class="like_count_blog" id="heart-counter">{{ post.likes }}</div>
+        </button>
+              <p>
+                <button type="button" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-heart"></span> Heart
+              </p>
+        </button>
 
        {% if liked %}
        <i class="heart-shaped fa fa-heart" style="display: line-block"></i>
@@ -36,13 +42,13 @@
        <i class="heart-shaped fa fa-heart-o" style="display: line-block"></i>
        {% endif %}
        </button>
-       <div class="like_count_blog" id="heart-counter">{{ post.likes }}</div>
+
     </div>
     <!-- include heart-->
-
+    <div>
+        <button type="button" class="btn btn-info add-new" id="add-comment" data-post-id="{{ post.pk }}"><i class="fa fa-plus"></i> Add New Comment</button>
+    </div>
 <hr>
-
-<a class="btn btn-default" id=add_comment_to_post href="{% url 'add_comment_to_post' pk=post.pk  username=user.username %}">Add comment</a>
 
 
 {% for comment in post.comments.all %}
@@ -93,7 +99,7 @@ $(document).ready(function() {
 
             var input = document.createElement("input");
             input.setAttribute('type', 'text');
-            var parent = document.getElementById("add_comment_to_post");
+            var parent = document.getElementById("add-comment");
             parent.appendChild(input);
 
         });
