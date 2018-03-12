@@ -1,0 +1,4 @@
+blog/__pycache__*
+.idea/*
+blog/migrations*
+django_girls/__pycache__*
