@@ -1,6 +1,5 @@
 blog/__pycache__*
 .idea/*
-.idea
 blog/migrations*
 django_girls/__pycache__*
 db.sqlite3
