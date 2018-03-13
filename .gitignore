@@ -3,3 +3,5 @@ blog/__pycache__*
 blog/migrations*
 django_girls/__pycache__*
 db.sqlite3
+__pycache__
+*.pyc
