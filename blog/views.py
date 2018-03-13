@@ -153,6 +153,7 @@ def like_count_blog(request):
             print("like")
             request.session['has_liked_' + post_id] = True
             likes = post.likes + 1
+
     post.likes = likes
     post.save()
     return HttpResponse(likes, liked)

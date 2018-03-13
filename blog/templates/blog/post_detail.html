@@ -2,7 +2,6 @@
 
 {% block content %}
 
-
     <div class="date">
     {% if post.published_date %}
         <!-- Include here logic to show or not show button-->
@@ -23,31 +22,16 @@
     <p>{{ post.question }}</p>
 
 
-    <!-- include heart-->
+    <!-- Like button-->
     <div class="heart-particle-box">
-       <button class="glyphicon glyphicon-exclamation-sign" id="heart-icon" data-post-id="{{ post.pk }}">
-           <div class="like_count_blog" id="heart-counter">{{ post.likes }}</div>
-        </button>
-              <p>
-                <button type="button" class="btn btn-default btn-sm">
-                <span class="glyphicon glyphicon-heart"></span> Heart
-              </p>
-        </button>
-
-       {% if liked %}
-       <i class="heart-shaped fa fa-heart" style="display: line-block"></i>
-       <i class="heart-shaped fa fa-heart-o" style="display: none"></i>
-       {% else %}
-       <i class="heart-shaped fa fa-heart" style="display: none"></i>
-       <i class="heart-shaped fa fa-heart-o" style="display: line-block"></i>
-       {% endif %}
+       <button class="likes post-likes glyphicon glyphicon-heart btn btn-default btn-sm" id="heart-icon" data-post-id="{{ post.pk }}" >
+           <div class="like_count_blog">{{ post.likes }}</div>
        </button>
 
+        <button class="btn btn-info add-new-comment" id="add-comment" data-post-id="{{ post.pk }}"><i class="fa fa-plus"></i> Add New Comment</button>
     </div>
-    <!-- include heart-->
-    <div>
-        <button type="button" class="btn btn-info add-new" id="add-comment" data-post-id="{{ post.pk }}"><i class="fa fa-plus"></i> Add New Comment</button>
-    </div>
+
+
 <hr>
 
 
@@ -70,43 +54,6 @@
 {% empty %}
     <p>No comments here yet :(</p>
 {% endfor %}
-<script>
-
-
-/* like counting */
-$(document).ready(function() {
-    $('.post-likes').click(function() {
-        var id;
-        id = $(this).attr('data-post-id');
-        $.get('/like-blog/', {
-            post_id: id
-        }, function(data) {
-            $('.like_count_blog').html(data);
-        });
-    });
-});
-
-
-/* Comment rendering */
-$(document).ready(function() {
-    $('.add-comment').click(function() {
-        var id;
-        id = $(this).attr('data-post-id');
-        $.get('/add-comment-to-post/', {
-            post_id: id
-        }, function(data) {
-            $('.like_count_blog').html(data);
-
-            var input = document.createElement("input");
-            input.setAttribute('type', 'text');
-            var parent = document.getElementById("add-comment");
-            parent.appendChild(input);
-
-        });
-    });
-});
-
-</script>
 {% endblock %}
 
 
