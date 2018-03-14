@@ -11,22 +11,41 @@ $(document).ready(function() {
     });
 });
 
+//insert after is not implemented in js so you can use this
+function insertAfter(referenceNode, newNode) {
+    referenceNode.parentNode.insertBefore(newNode, referenceNode.nextSibling);
+}
 
-/* Add new comment on post button */
 $(document).ready(function() {
     $('.add-new-comment').click(function() {
-        var id;
-        id = $(this).attr('data-post-id');
-        $.get('/add-comment-to-post/', {
-            post_id: id
-        }, function(data) {
-            $('.add_comment_to_post').html(data);
 
-            var input = document.createElement("input");
-            input.setAttribute('type', 'text');
-            var parent = document.getElementById("add-comment");
-            parent.appendChild(input);
+        //Disable button after one click, if not show new text input for every click
+        $(this).prop('disabled', true);
 
-        });
+        var parent = document.getElementById('text-box-input')
+        var div = document.createElement('div')
+        div.setAttribute('class', 'input-group mb-3')
+        div.setAttribute('id', 'input-group mb-3')
+        insertAfter(parent, div)
+
+        var parent = document.getElementById('input-group mb-3')
+        var input = document.createElement("input");
+        input.setAttribute('type', 'text');
+        input.setAttribute('class', 'form-control');
+        input.setAttribute('placeholder', "Left your comment here");
+        input.style.height="50%";
+        input.style.width="50%";
+        parent.appendChild(input)
+
+        var div = document.createElement('span')
+        div.setAttribute('class', 'input-group-append')
+        var btn = document.createElement('button')
+        btn.setAttribute('class', 'btn btn-outline-secondary')
+        btn.setAttribute('content', 'Publish');
+        div.appendChild(btn)
+
+        parent.appendChild(div)
+
     });
 });
+

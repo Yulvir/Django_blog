@@ -16,25 +16,34 @@
     {% else %}
     <a class="btn btn-default" href="{% url 'post_publish' username=user.username  pk=post.pk %}">Publish</a>
     {% endif %}
+
     </div>
-    <h3>{{ post.author.username }}</h3>
-    <h2>{{ post.title }}</h2>
+
+<div>
+<h3>{{ post.author.username }}</h3>
+        <h2>{{ post.title }} <span>
+        <button class="likes post-likes glyphicon glyphicon-heart btn btn-default btn-sm" id="heart-icon" data-post-id="{{ post.pk }}" >
+            <spam class="like_count_blog">{{ post.likes }}</spam>
+                </button>
+            </span>
+            <spn>
+                <button class="btn btn-info add-new-comment" id="add-new-comment-btn" data-href="{% url 'add_comment_to_post' pk=post.pk username=user.username %}"><i class="fa fa-plus"></i> Add New Comment</button>
+            </spn>
+        </h2>
     <p>{{ post.question }}</p>
 
+    <div id="text-box-input">
 
-    <!-- Like button-->
-    <div class="heart-particle-box">
-       <button class="likes post-likes glyphicon glyphicon-heart btn btn-default btn-sm" id="heart-icon" data-post-id="{{ post.pk }}" >
-           <div class="like_count_blog">{{ post.likes }}</div>
-       </button>
+</div>
 
-        <button class="btn btn-info add-new-comment" id="add-comment" data-post-id="{{ post.pk }}"><i class="fa fa-plus"></i> Add New Comment</button>
-    </div>
+</div>
+
+
 
 
 <hr>
 
-
+<div>
 {% for comment in post.comments.all %}
     {% if user.is_authenticated or comment.approved_comment %}
     <div class="comment">
@@ -56,4 +65,4 @@
 {% endfor %}
 {% endblock %}
 
-
+</div>

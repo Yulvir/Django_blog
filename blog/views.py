@@ -135,6 +135,11 @@ def add_comment_to_post(request, pk, username):
 
     return HttpResponse(request, 'blog/post_detail.html', {'form': form})
 
+@login_required
+def click_add_comment(request):
+
+    return HttpResponse(request, 'blog/post_detail.html')
+
 # New like logic
 def like_count_blog(request):
     liked = False
