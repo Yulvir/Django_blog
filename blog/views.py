@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 from django.utils import timezone
 from .models import Post, Comment
+from .filters import PostFilter
 from django.shortcuts import get_object_or_404
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
@@ -12,6 +13,7 @@ from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 import logging
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -38,10 +40,30 @@ def signup(request):
 
 @login_required
 def post_list(request):
+    # TODO: Include paginator
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
+    posts_filter = PostFilter(request.GET, queryset=posts)
 
+    # https: // stackoverflow.com / questions / 44048156 / django - filter - use - paginations
 
-    return render(request, 'blog/post_list.html', {'posts': posts})
+    paginator = Paginator(posts_filter.qs, 4)  # Show 4 posts per page
+
+    page = request.GET.get('page')
+    # Include paginator https://docs.djangoproject.com/en/1.8/topics/pagination/
+
+    try:
+        # If page is not an integer display first page
+        posts_pag = paginator.page(page)
+    except PageNotAnInteger:
+        posts_pag = paginator.page(1)
+    except EmptyPage:
+        posts_pag = paginator.page(paginator.num_pages)
+
+    # posts_filter object has a form attribute
+    # posts_pag is a paginator object. It doesn't have a form attribute so we cannot render the form.
+    # We must pass through parameters posts_filter to render the form and posts_pag to render the pagination
+
+    return render(request, 'blog/post_list.html', {'posts': posts_pag, 'posts_form': posts_filter})
 
 
 @login_required
