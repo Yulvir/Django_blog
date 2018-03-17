@@ -26,16 +26,19 @@
             <spam class="like_count_blog">{{ post.likes }}</spam>
                 </button>
             </span>
-            <spn>
-                <button class="btn btn-info add-new-comment" id="add-new-comment-btn" ><i class="fa fa-plus"></i> Add New Comment</button>
-            </spn>
+
         </h2>
     <p>{{ post.question }}</p>
 
-
+            <spn>
+                <button class="btn btn-info add-new-comment" id="add-new-comment-btn" data-post-id="{{ post.pk }}"><i class="fa fa-plus"></i>Add New Comment</button>
+            </spn>
 
 </div>
 
+<div class="leave_comment_div">
+
+</div>
 
 <hr>
 
