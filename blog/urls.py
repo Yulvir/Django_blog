@@ -14,5 +14,5 @@ urlpatterns = [
     url(r'^(?P<username>[a-zA-Z0-9]+)/comment/(?P<pk>\d+)/remove/$', views.comment_remove, name='comment_remove'),
     url(r'profile/(?P<username>[a-zA-Z0-9]+)$', views.get_user_profile, name='get_user_profile'),
     url(r'^like-blog/$', views.like_count_blog, name='like_count_blog'),
-    url(r'^click_add_comment/$', views.click_add_comment, name='click_add_comment'),
+    url(r'^add-comment-to-post/$', views.add_comment_to_post, name='click_add_comment'),
 ]

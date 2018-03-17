@@ -71,19 +71,6 @@ def post_detail(request, pk, username):
     post = get_object_or_404(Post, pk=pk)
     user = User.objects.get(username=username)
 
-    #######
-
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = user
-            comment.save()
-            return redirect('post_detail', pk=post.pk, username=request.user.username)
-    else:
-        form = CommentForm()
-
     # New
     post_id = post.pk
     liked = False
@@ -91,7 +78,7 @@ def post_detail(request, pk, username):
         liked = True
         print("liked {}_{}".format(liked, post_id))
 
-    context = {'post': post, 'liked': liked, 'username': user.username, 'form': form}
+    context = {'post': post, 'liked': liked, 'username': user.username}
 
     return render(request, 'blog/post_detail.html', context)
 
@@ -140,22 +127,22 @@ def post_remove(request, pk, username):
     return redirect('post_list')
 
 @login_required
-def add_comment_to_post(request, pk, username):
-    post = get_object_or_404(Post, pk=pk)
-    user = User.objects.get(username=username)
+def add_comment_to_post(request):
 
-    if request.method == "POST":
-        form = CommentForm(request.POST)
-        if form.is_valid():
-            comment = form.save(commit=False)
-            comment.post = post
-            comment.author = user
-            comment.save()
-            return redirect('post_detail', pk=post.pk, username=request.user.username)
-    else:
-        form = CommentForm()
+    user = User.objects.get(username=request.user.username)
 
-    return HttpResponse(request, 'blog/post_detail.html', {'form': form})
+    if request.method == 'GET':
+        post = get_object_or_404(Post, pk=request.GET['post_id'])
+
+        comment = Comment(author=user.username, text=request.GET['text'], post_id=post.pk)
+        comment.save()
+
+    liked = False
+    if request.session.get('has_liked_' + str(request.GET['post_id']), liked):
+        liked = True
+
+    context = {'post': post, 'liked': liked, 'username': user.username}
+    return render(request, 'blog/post_detail.html', context)
 
 @login_required
 def click_add_comment(request):

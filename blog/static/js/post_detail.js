@@ -14,8 +14,16 @@ $(document).ready(function() {
 
 function sendMessage(){
 
-
-
+        var id;
+        id = $(".add-new-comment").attr('data-post-id');
+        var text = $(".comment-text-area").val()
+        console.log(text)
+        $.get('/add-comment-to-post/', {
+            post_id: id,
+            text: text
+        }, function(data) {
+            $('.add_new_comment').html(data);
+        });
 
         console.log("Send comment")
         $(".submit-comment-button").detach()
@@ -34,14 +42,17 @@ $(document).ready(function() {
         if(state == "Add New Comment"){
             $('.add-new-comment').text("Cancel Comment")
 
-            var text_area = document.createElement("TEXTAREA");
+            var text_area = document.createElement("textarea");
             $("<input type='submit' class='submit-comment-button' onclick='sendMessage()' />").appendTo(".like_comment_div");
 
 
             $(text_area).addClass("comment-text-area");
             $(text_area).attr("rows", "4").attr("cols", "60")
+
+
             $('.leave_comment_div').append(text_area)
         } else{
+
 
             $('.add-new-comment').text("Add New Comment")
             $('.comment-text-area').detach()
