@@ -19,7 +19,7 @@
 
     </div>
 
-<div>
+<div class="like_comment_div">
 <h3>{{ post.author.username }}</h3>
         <h2>{{ post.title }} <span>
         <button class="likes post-likes glyphicon glyphicon-heart btn btn-default btn-sm" id="heart-icon" data-post-id="{{ post.pk }}" >
@@ -27,18 +27,14 @@
                 </button>
             </span>
             <spn>
-                <button class="btn btn-info add-new-comment" id="add-new-comment-btn" data-href="{% url 'add_comment_to_post' pk=post.pk username=user.username %}"><i class="fa fa-plus"></i> Add New Comment</button>
+                <button class="btn btn-info add-new-comment" id="add-new-comment-btn" ><i class="fa fa-plus"></i> Add New Comment</button>
             </spn>
         </h2>
     <p>{{ post.question }}</p>
 
-    <div id="text-box-input">
+
 
 </div>
-
-</div>
-
-
 
 
 <hr>
