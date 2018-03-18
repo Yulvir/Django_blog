@@ -11,6 +11,22 @@ $(document).ready(function() {
     });
 });
 
+// Get cookie value to extract the csrf token using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
 
 function sendMessage(){
 
@@ -18,19 +34,34 @@ function sendMessage(){
         id = $(".add-new-comment").attr('data-post-id');
         var text = $(".comment-text-area").val()
         console.log(text)
-        $.get('/add-comment-to-post/', {
-            post_id: id,
-            text: text
-        }, function(data) {
-            $('.add_new_comment').html(data);
+
+
+        var csrftoken = getCookie('csrftoken');
+        var request;
+        request = $.ajax({
+            url: "/add-comment-to-post/",
+            method: "POST",
+            data:
+            {
+                post_id: id,
+                text: text,
+                csrfmiddlewaretoken: csrftoken
+            },
+            datatype: "json"
+        });
+
+        request.done(function(msg) {
+            //$("#result").html(msg);
+        });
+
+        request.fail(function(jqXHR, textStatus) {
+            //$("#result").html("Request failed: " + textStatus);
         });
 
         console.log("Send comment")
         $(".submit-comment-button").detach()
         $(".comment-text-area").detach()
         $('.add-new-comment').text("Add New Comment")
-
-
 }
 
 
@@ -45,10 +76,8 @@ $(document).ready(function() {
             var text_area = document.createElement("textarea");
             $("<input type='submit' class='submit-comment-button' onclick='sendMessage()' />").appendTo(".like_comment_div");
 
-
             $(text_area).addClass("comment-text-area");
             $(text_area).attr("rows", "4").attr("cols", "60")
-
 
             $('.leave_comment_div').append(text_area)
         } else{

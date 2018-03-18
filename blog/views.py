@@ -9,7 +9,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import UserCreationForm
 from django.shortcuts import render, redirect
-from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import HttpResponse
 import logging
@@ -131,17 +130,18 @@ def add_comment_to_post(request):
 
     user = User.objects.get(username=request.user.username)
 
-    if request.method == 'GET':
-        post = get_object_or_404(Post, pk=request.GET['post_id'])
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=request.POST['post_id'])
 
-        comment = Comment(author=user.username, text=request.GET['text'], post_id=post.pk)
+        comment = Comment(author=user.username, text=request.POST['text'], post_id=post.pk)
         comment.save()
 
     liked = False
-    if request.session.get('has_liked_' + str(request.GET['post_id']), liked):
+    if request.session.get('has_liked_' + str(request.POST['post_id']), liked):
         liked = True
 
     context = {'post': post, 'liked': liked, 'username': user.username}
+
     return render(request, 'blog/post_detail.html', context)
 
 @login_required
