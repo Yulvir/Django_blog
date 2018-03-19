@@ -132,7 +132,6 @@ def add_comment_to_post(request):
 
     if request.method == 'POST':
         post = get_object_or_404(Post, pk=request.POST['post_id'])
-
         comment = Comment(author=user.username, text=request.POST['text'], post_id=post.pk)
         comment.save()
 

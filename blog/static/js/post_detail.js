@@ -6,6 +6,7 @@ $(document).ready(function() {
         $.get('/like-blog/', {
             post_id: id
         }, function(data) {
+        console.log(data)
             $('.like_count_blog').html(data);
         });
     });
@@ -51,14 +52,14 @@ function sendMessage(){
         });
 
         request.done(function(msg) {
-            //$("#result").html(msg);
+            //Refresh browser
+            window.location.reload()
         });
 
         request.fail(function(jqXHR, textStatus) {
-            //$("#result").html("Request failed: " + textStatus);
         });
 
-        console.log("Send comment")
+
         $(".submit-comment-button").detach()
         $(".comment-text-area").detach()
         $('.add-new-comment').text("Add New Comment")
