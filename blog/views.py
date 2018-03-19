@@ -70,7 +70,8 @@ def post_detail(request, pk, username):
     post = get_object_or_404(Post, pk=pk)
     user = User.objects.get(username=username)
 
-    # New
+    #TODO: Reverse comments order
+
     post_id = post.pk
     liked = False
     if request.session.get('has_liked_'+str(post_id), liked):
