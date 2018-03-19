@@ -36,7 +36,7 @@ function sendMessage(){
         var text = $(".comment-text-area").val()
         console.log(text)
 
-
+        if(text !== ""){
         var csrftoken = getCookie('csrftoken');
         var request;
         request = $.ajax({
@@ -63,6 +63,9 @@ function sendMessage(){
         $(".submit-comment-button").detach()
         $(".comment-text-area").detach()
         $('.add-new-comment').text("Add New Comment")
+
+        }
+
 }
 
 
