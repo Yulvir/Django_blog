@@ -45,7 +45,7 @@ def post_list(request):
 
     # https: // stackoverflow.com / questions / 44048156 / django - filter - use - paginations
 
-    paginator = Paginator(posts_filter.qs, 4)  # Show 4 posts per page
+    paginator = Paginator(posts_filter.qs, 4, allow_empty_first_page=True)  # Show 4 posts per page
 
     page = request.GET.get('page')
     # Include paginator https://docs.djangoproject.com/en/1.8/topics/pagination/
@@ -142,9 +142,10 @@ def add_comment_to_post(request):
 
     context = {'post': post, 'liked': liked, 'username': user.username}
 
-    return render(request, 'blog/post_detail.html', context)@login_required
+    return render(request, 'blog/post_detail.html', context)\
 
 
+@login_required
 def answer(request):
 
     user = User.objects.get(username=request.user.username)
@@ -153,16 +154,10 @@ def answer(request):
         post = get_object_or_404(Post, pk=request.POST['post_id'])
         text = request.POST['text']
         post.user_choice = text
-
+        #save
         post.save()
 
-    liked = False
-    if request.session.get('has_liked_' + str(request.POST['post_id']), liked):
-        liked = True
-
-    context = {'post': post, 'liked': liked, 'username': user.username}
-
-    return render(request, 'blog/post_detail.html', context)
+    return HttpResponse(post.user_choice)
 
 @login_required
 def click_add_comment(request):
@@ -215,3 +210,27 @@ def get_user_profile(request, username):
     return render(request, 'blog/user_profile.html', {"user": user, "posts": posts})
 
 
+from django.views.generic import TemplateView
+from pygal.style import DarkStyle
+
+from .charts import ChoicesPieChart
+
+class IndexView(TemplateView):
+    template_name = 'post_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(IndexView, self).get_context_data(**kwargs)
+
+        # Instantiate our chart. We'll keep the size/style/etc.
+        # config here in the view instead of `charts.py`.
+        cht_choices = ChoicesPieChart(
+            height=600,
+            width=800,
+            explicit_size=True,
+            style=DarkStyle
+        )
+
+        # Call the `.generate()` method on our chart object
+        # and pass it to template context.
+        context['cht_choices'] = cht_choices.generate()
+        return context

@@ -77,6 +77,7 @@ $('#myForm input').on('change', function() {
             console.log(var_name);
 
             id = $(".add-new-comment").attr('data-post-id');
+            console.log(id);
 
             var csrftoken = getCookie('csrftoken');
             var request;
