@@ -10,7 +10,10 @@ class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=200)
     question = models.TextField(max_length=140)
-    numerical_rate = models.IntegerField(default=0)
+    answer_a = models.TextField()
+    answer_b = models.TextField()
+    answer_c = models.TextField()
+    user_choice = models.CharField(max_length=1)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True,
                                           null=True)

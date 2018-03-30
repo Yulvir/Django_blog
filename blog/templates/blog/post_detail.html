@@ -40,6 +40,27 @@
 
 </div>
 
+<ul>
+    <li>A: {{ post.answer_a }}</li>
+    <li>B: {{ post.answer_b }}</li>
+    <li>C: {{ post.answer_c }}</li>
+
+</ul>
+
+
+<form id="myForm">
+
+<br>
+<input type="radio" name="answer" value="A" />A<br>
+<input type="radio" name="answer" value="B" />B<br>
+<input type="radio" name="answer" value="C" />C<br>
+</form>
+
+{% if post.user_choice %}
+<p> Your answer is: {{post.user_choice}} </p>
+{% endif %}
+
+
 <hr>
 
 <div>

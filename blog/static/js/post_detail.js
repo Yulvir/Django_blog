@@ -69,8 +69,53 @@ function sendMessage(){
 }
 
 
+$(document).ready(function() {
+
+
+$('#myForm input').on('change', function() {
+            var var_name = $("input[name='answer']:checked", "#myForm").val();
+            console.log(var_name);
+
+            id = $(".add-new-comment").attr('data-post-id');
+
+            var csrftoken = getCookie('csrftoken');
+            var request;
+            request = $.ajax({
+                url: "/answer/",
+                method: "POST",
+                data:
+                {
+                    post_id: id,
+                    text: var_name,
+                    csrfmiddlewaretoken: csrftoken
+                },
+                datatype: "json"
+            });
+
+            request.done(function(msg) {
+                //Refresh browser
+                window.location.reload()
+
+            });
+
+            request.fail(function(jqXHR, textStatus) {
+            });
+
+
+
+
+        });
+        });
+
+
+
+
 // Add new comment
 $(document).ready(function() {
+
+
+
+
     $('.add-new-comment').click(function() {
         var state = $('.add-new-comment').text()
         console.log(state)

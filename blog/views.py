@@ -142,6 +142,26 @@ def add_comment_to_post(request):
 
     context = {'post': post, 'liked': liked, 'username': user.username}
 
+    return render(request, 'blog/post_detail.html', context)@login_required
+
+
+def answer(request):
+
+    user = User.objects.get(username=request.user.username)
+
+    if request.method == 'POST':
+        post = get_object_or_404(Post, pk=request.POST['post_id'])
+        text = request.POST['text']
+        post.user_choice = text
+
+        post.save()
+
+    liked = False
+    if request.session.get('has_liked_' + str(request.POST['post_id']), liked):
+        liked = True
+
+    context = {'post': post, 'liked': liked, 'username': user.username}
+
     return render(request, 'blog/post_detail.html', context)
 
 @login_required
