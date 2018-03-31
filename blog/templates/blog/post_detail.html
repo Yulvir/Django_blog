@@ -58,10 +58,14 @@
 
 {% if post.user_choice %}
 <p> Your answer is: {{post.user_choice}} </p>
+
+{% for k in choices %}
+    <p> Votes to {{ k.user_choice }} :  {{ k.the_count }} </p>
+
+{% endfor %}
+
+
 {% endif %}
-
-
-  {{ cht_choices|safe }}
 
 
 <hr>

@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 from django.utils import timezone
+from django.db.models import Count
+
 from .models import Post, Comment
 from .filters import PostFilter
 from django.shortcuts import get_object_or_404
@@ -72,13 +74,16 @@ def post_detail(request, pk, username):
 
     #TODO: Reverse comments order
 
+    fieldname = 'user_choice'
+    choices = Post.objects.values(fieldname).order_by(fieldname).annotate(the_count=Count(fieldname))
+
     post_id = post.pk
     liked = False
     if request.session.get('has_liked_'+str(post_id), liked):
         liked = True
         print("liked {}_{}".format(liked, post_id))
 
-    context = {'post': post, 'liked': liked, 'username': user.username}
+    context = {'post': post, 'liked': liked, 'username': user.username, 'choices': choices}
 
     return render(request, 'blog/post_detail.html', context)
 
@@ -209,28 +214,3 @@ def get_user_profile(request, username):
 
     return render(request, 'blog/user_profile.html', {"user": user, "posts": posts})
 
-
-from django.views.generic import TemplateView
-from pygal.style import DarkStyle
-
-from .charts import ChoicesPieChart
-
-class IndexView(TemplateView):
-    template_name = 'post_detail.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(IndexView, self).get_context_data(**kwargs)
-
-        # Instantiate our chart. We'll keep the size/style/etc.
-        # config here in the view instead of `charts.py`.
-        cht_choices = ChoicesPieChart(
-            height=600,
-            width=800,
-            explicit_size=True,
-            style=DarkStyle
-        )
-
-        # Call the `.generate()` method on our chart object
-        # and pass it to template context.
-        context['cht_choices'] = cht_choices.generate()
-        return context

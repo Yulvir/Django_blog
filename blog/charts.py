@@ -27,4 +27,4 @@ class ChoicesPieChart:
             self.chart.add(key, value)
 
         # Return the rendered SVG
-        return self.chart.render(is_unicode=True)
+       return self.chart.render(is_unicode=True)
