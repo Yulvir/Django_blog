@@ -76,14 +76,14 @@ WSGI_APPLICATION = 'django_girls.wsgi.application'
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
 
+# settings.py
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'dside',
-        'USER': 'ncarvalho',
-        'PASSWORD': 'melides67',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',  # set in docker-compose.yml
+        'PORT': 5432  # default postgres port
     }
 }
 
