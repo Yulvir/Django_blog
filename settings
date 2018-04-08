@@ -1,0 +1,5 @@
+DB_NAME=posgres
+DB_USER=yulvir
+DB_PASS=yulvir
+DB_SERVICE=postgres
+DB_PORT=5432
