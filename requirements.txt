@@ -1,0 +1,6 @@
+Django==1.8
+django-filter==1.1.0
+django-graphos==0.3.41
+django-multiselectfield==0.1.8
+psycopg2==2.7.4
+pygal==2.4.0
