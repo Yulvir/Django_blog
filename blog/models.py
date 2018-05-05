@@ -10,10 +10,10 @@ class Post(models.Model):
     author = models.ForeignKey('auth.User')
     title = models.CharField(max_length=200)
     question = models.TextField(max_length=140)
+    user_choice = models.CharField(max_length=1)
     answer_a = models.TextField()
     answer_b = models.TextField()
     answer_c = models.TextField()
-    user_choice = models.CharField(max_length=1)
     created_date = models.DateTimeField(default=timezone.now)
     published_date = models.DateTimeField(blank=True,
                                           null=True)
@@ -32,6 +32,10 @@ class Post(models.Model):
     def __str__(self):
         return self.title
 
+class Choice(models.Model):
+    post = models.ForeignKey('blog.Post', related_name='choice')
+    user_choice = models.CharField(max_length=1)
+    author = models.CharField(max_length=200)
 
 class Comment(models.Model):
     post = models.ForeignKey('blog.Post', related_name='comments')

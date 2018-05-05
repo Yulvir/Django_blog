@@ -16,4 +16,5 @@ urlpatterns = [
     url(r'^like-blog/$', views.like_count_blog, name='like_count_blog'),
     url(r'^add-comment-to-post/$', views.add_comment_to_post, name='click_add_comment'),
     url(r'^answer/$', views.answer, name='answer'),
+    url(r'^graph_choices/$', views.graph_choices, name='graph_choices'),
 ]

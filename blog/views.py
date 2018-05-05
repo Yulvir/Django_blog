@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 from django.utils import timezone
 from django.db.models import Count
 
-from .models import Post, Comment
+from .models import Post, Comment, Choice
 from .filters import PostFilter
 from django.shortcuts import get_object_or_404
 from .forms import PostForm, CommentForm
@@ -18,6 +18,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
+from django.http import JsonResponse
 
 
 def go_to_signup(request):
@@ -75,7 +76,8 @@ def post_detail(request, pk, username):
     #TODO: Reverse comments order
 
     fieldname = 'user_choice'
-    choices = Post.objects.values(fieldname).order_by(fieldname).annotate(the_count=Count(fieldname))
+    choices = Choice.objects.values(fieldname).order_by(fieldname).annotate(the_count=Count(fieldname))
+
 
     post_id = post.pk
     liked = False
@@ -86,6 +88,15 @@ def post_detail(request, pk, username):
     context = {'post': post, 'liked': liked, 'username': user.username, 'choices': choices}
 
     return render(request, 'blog/post_detail.html', context)
+
+@login_required
+def graph_choices(request):
+    fieldname = 'user_choice'
+    choices = Post.objects.values(fieldname).order_by(fieldname).annotate(the_count=Count(fieldname))
+
+    return JsonResponse(list(choices), safe=False)
+
+
 
 @login_required
 def post_new(request, username):
@@ -156,11 +167,25 @@ def answer(request):
     user = User.objects.get(username=request.user.username)
 
     if request.method == 'POST':
-        post = get_object_or_404(Post, pk=request.POST['post_id'])
+        pk = request.POST['post_id']
+        post = get_object_or_404(Post, pk=pk)
         text = request.POST['text']
         post.user_choice = text
-        #save
+
+        #save post
         post.save()
+
+        #save choice
+
+        try:
+            choice = get_object_or_404(Choice, post=post, author=user.username)
+            if choice.user_choice != text:
+                choice.user_choice = text
+                choice.save()
+        except:
+
+            choice = Choice.objects.create(post=post, user_choice=text, author=user.username)
+
 
     return HttpResponse(post.user_choice)
 
